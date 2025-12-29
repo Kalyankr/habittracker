@@ -1,0 +1,20 @@
+defaults:
+  - _self_
+  - model: xgboost
+  - processing: default
+
+hydra:
+  run:
+    dir: outputs/${now:%Y-%m-%d}/${now:%H-%M-%S}
+
+data:
+  raw_path: "data/raw/sensor_data.csv"
+  processed_path: "data/processed/features.csv"
+  test_size: 0.2
+  random_state: 42
+
+experiment:
+  name: "hair-touching-detection"
+  tracking_uri: "mlruns"
+
+train_only: false
