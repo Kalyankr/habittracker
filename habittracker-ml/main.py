@@ -3,8 +3,7 @@ from omegaconf import DictConfig, OmegaConf
 import logging
 import os
 import pandas as pd
-from src.data.make_dataset import process_data
-from src.features.build_features import build_features
+from src.data.build_features import build_features
 from src.models.train_model import train
 
 log = logging.getLogger(__name__)
@@ -18,6 +17,7 @@ def main(cfg: DictConfig):
         if os.path.exists(cfg.data.processed_path):
             log.info(f"Loading processed features from {cfg.data.processed_path}")
             df_features = pd.read_csv(cfg.data.processed_path)
+
             train(df_features, cfg)
             return
         else:
@@ -25,25 +25,15 @@ def main(cfg: DictConfig):
                 f"Processed file not found at {cfg.data.processed_path}. Running full pipeline."
             )
 
-    # 1. Load and Clean Data
+    # Load and Clean Data
     # Check if raw data exists
     if not os.path.exists(cfg.data.raw_path):
         log.error(
             f"Raw data not found at {cfg.data.raw_path}. Please place your sensor data there."
         )
         return
-
-    df_raw = process_data(cfg)
-
-    # 2. Feature Engineering
-    df_features = build_features(df_raw, cfg)
-
-    # Save processed features
-    os.makedirs(os.path.dirname(cfg.data.processed_path), exist_ok=True)
-    df_features.to_csv(cfg.data.processed_path, index=False)
-    log.info(f"Saved processed features to {cfg.data.processed_path}")
-
-    # 3. Train Model
+    df_features = build_features(cfg)
+    # Train Model
     train(df_features, cfg)
 
 

@@ -4,3 +4,11 @@ window_size_sec: 2.0
 overlap_percent: 0.5
 cutoff_freq_low: 0.5  # Hz (High-pass filter to remove gravity)
 cutoff_freq_high: 20.0 # Hz (Low-pass filter to remove noise)
+data_columns:
+  - accelerationX
+  - accelerationY
+  - accelerationZ
+  - rotationRateX
+  - rotationRateY
+  - rotationRateZ
+label_column: label
