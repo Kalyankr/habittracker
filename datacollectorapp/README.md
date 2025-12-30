@@ -1,10 +1,3 @@
-//
-//  README.md
-//  datacollectorapp
-//
-//  Created by Kalyan reddy Katla on 12/30/25.
-//
-
 # Hair-Touching Habit Tracker Feature Engineering
 
 This repository contains code to process Apple Watch sensor data and generate **ML-ready features** for detecting hair-touching habits.
@@ -38,15 +31,3 @@ The pipeline produces **windowed features** for each 5-second segment (50% overl
 5. Window the data into **5-second segments** with **50% overlap**.
 6. Extract features from accelerometer, gyroscope, and orientation.
 7. Produce a **final ML-ready DataFrame** (`ml_df`) with features and label (if available).
-
----
-
-## Usage
-
-```python
-import pandas as pd
-# Run the feature engineering script
-ml_df = feature_engineering_pipeline(accel_csv, motion_csv)
-
-# ml_df is now ready for ML model training
-print(ml_df.head())
