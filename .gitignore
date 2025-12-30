@@ -219,3 +219,17 @@ __marimo__/
 *csv
 
 .DS_Store
+
+
+# iOS
+ios/iosapp/Pods/
+ios/iosapp/build/
+ios/iosapp/DerivedData/
+ios/iosapp/*.xcworkspace
+ios/iosapp/*.xcuserdata/
+
+ios/ioswatch/Pods/
+ios/ioswatch/build/
+ios/ioswatch/DerivedData/
+ios/ioswatch/*.xcworkspace
+ios/ioswatch/*.xcuserdata/

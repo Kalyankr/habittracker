@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		B60459482F03AFDA009C608C /* datacollectorapp Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = B60459472F03AFDA009C608C /* datacollectorapp Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		B6415CA02F03B2EC0056083E /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = B6415C9F2F03B2D10056083E /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +38,7 @@
 /* Begin PBXFileReference section */
 		B604593A2F03AFDA009C608C /* datacollectorapp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = datacollectorapp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B60459472F03AFDA009C608C /* datacollectorapp Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "datacollectorapp Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B6415C9F2F03B2D10056083E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -73,6 +75,7 @@
 		B60459312F03AFDA009C608C = {
 			isa = PBXGroup;
 			children = (
+				B6415C9F2F03B2D10056083E /* README.md */,
 				B604593C2F03AFDA009C608C /* datacollectorapp */,
 				B604594B2F03AFDA009C608C /* datacollectorapp Watch App */,
 				B604593B2F03AFDA009C608C /* Products */,
@@ -197,6 +200,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B6415CA02F03B2EC0056083E /* README.md in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
