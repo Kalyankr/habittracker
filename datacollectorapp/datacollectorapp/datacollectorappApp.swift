@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct datacollectorappApp: App {
+    @StateObject private var connectivityManager = PhoneConnectivityManager.shared
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(connectivityManager)
         }
     }
 }

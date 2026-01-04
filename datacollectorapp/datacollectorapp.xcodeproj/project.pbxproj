@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B60459482F03AFDA009C608C /* datacollectorapp Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = B60459472F03AFDA009C608C /* datacollectorapp Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		B6415CA02F03B2EC0056083E /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = B6415C9F2F03B2D10056083E /* README.md */; };
+		B60459482F03AFDA009C608C /* datacollectorappWatchApp.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = B60459472F03AFDA009C608C /* datacollectorappWatchApp.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,7 +27,7 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
-				B60459482F03AFDA009C608C /* datacollectorapp Watch App.app in Embed Watch Content */,
+				B60459482F03AFDA009C608C /* datacollectorappWatchApp.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -37,8 +36,7 @@
 
 /* Begin PBXFileReference section */
 		B604593A2F03AFDA009C608C /* datacollectorapp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = datacollectorapp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		B60459472F03AFDA009C608C /* datacollectorapp Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "datacollectorapp Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B6415C9F2F03B2D10056083E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = README.md; sourceTree = "<group>"; };
+		B60459472F03AFDA009C608C /* datacollectorappWatchApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = datacollectorappWatchApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -75,7 +73,6 @@
 		B60459312F03AFDA009C608C = {
 			isa = PBXGroup;
 			children = (
-				B6415C9F2F03B2D10056083E /* README.md */,
 				B604593C2F03AFDA009C608C /* datacollectorapp */,
 				B604594B2F03AFDA009C608C /* datacollectorapp Watch App */,
 				B604593B2F03AFDA009C608C /* Products */,
@@ -86,7 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				B604593A2F03AFDA009C608C /* datacollectorapp.app */,
-				B60459472F03AFDA009C608C /* datacollectorapp Watch App.app */,
+				B60459472F03AFDA009C608C /* datacollectorappWatchApp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -118,9 +115,9 @@
 			productReference = B604593A2F03AFDA009C608C /* datacollectorapp.app */;
 			productType = "com.apple.product-type.application";
 		};
-		B60459462F03AFDA009C608C /* datacollectorapp Watch App */ = {
+		B60459462F03AFDA009C608C /* datacollectorappWatchApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B60459542F03AFDB009C608C /* Build configuration list for PBXNativeTarget "datacollectorapp Watch App" */;
+			buildConfigurationList = B60459542F03AFDB009C608C /* Build configuration list for PBXNativeTarget "datacollectorappWatchApp" */;
 			buildPhases = (
 				B60459432F03AFDA009C608C /* Sources */,
 				B60459442F03AFDA009C608C /* Frameworks */,
@@ -133,11 +130,11 @@
 			fileSystemSynchronizedGroups = (
 				B604594B2F03AFDA009C608C /* datacollectorapp Watch App */,
 			);
-			name = "datacollectorapp Watch App";
+			name = datacollectorappWatchApp;
 			packageProductDependencies = (
 			);
 			productName = "datacollectorapp Watch App";
-			productReference = B60459472F03AFDA009C608C /* datacollectorapp Watch App.app */;
+			productReference = B60459472F03AFDA009C608C /* datacollectorappWatchApp.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -173,7 +170,7 @@
 			projectRoot = "";
 			targets = (
 				B60459392F03AFDA009C608C /* datacollectorapp */,
-				B60459462F03AFDA009C608C /* datacollectorapp Watch App */,
+				B60459462F03AFDA009C608C /* datacollectorappWatchApp */,
 			);
 		};
 /* End PBXProject section */
@@ -200,7 +197,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B6415CA02F03B2EC0056083E /* README.md in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -216,7 +212,7 @@
 /* Begin PBXTargetDependency section */
 		B604594A2F03AFDA009C608C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B60459462F03AFDA009C608C /* datacollectorapp Watch App */;
+			target = B60459462F03AFDA009C608C /* datacollectorappWatchApp */;
 			targetProxy = B60459492F03AFDA009C608C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -367,7 +363,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+				WATCHOS_DEPLOYMENT_TARGET = 10.6;
 			};
 			name = Debug;
 		};
@@ -401,7 +397,7 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				VALIDATE_PRODUCT = YES;
-				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+				WATCHOS_DEPLOYMENT_TARGET = 10.6;
 			};
 			name = Release;
 		};
@@ -488,7 +484,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B60459542F03AFDB009C608C /* Build configuration list for PBXNativeTarget "datacollectorapp Watch App" */ = {
+		B60459542F03AFDB009C608C /* Build configuration list for PBXNativeTarget "datacollectorappWatchApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B60459552F03AFDB009C608C /* Debug */,
