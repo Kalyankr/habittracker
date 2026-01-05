@@ -9,154 +9,104 @@ import coremltools as ct
 from omegaconf import DictConfig
 from src.models.metrics import (
     log_fold_metrics,
+    log_aggregated_cv_metrics,
     log_final_confusion_matrix,
-    log_aggregated_cv_confusion_matrix,
+    log_prediction_latency,
+    log_batch_drift,
 )
 
 log = logging.getLogger(__name__)
 
 
 def train(df: pd.DataFrame, cfg: DictConfig):
-    """
-    Train XGBoost using Leave-One-Batch-Out cross-validation.
+    log.info("Starting training")
 
-    Logs:
-      - Per-fold accuracy & F1
-      - Per-fold confusion matrices
-      - Aggregated CV confusion matrix (REAL performance)
-      - Mean / std CV metrics
-      - Final confusion matrix (sanity check)
-      - Trained XGBoost model
-      - Optional CoreML model
-    """
-
-    log.info("Starting training...")
-
-    # Validation
-    required_cols = {"label", "batch_id"}
-    if not required_cols.issubset(df.columns):
-        raise ValueError("DataFrame must contain 'label' and 'batch_id' columns")
-
-    # Data
     X = df.drop(columns=["label", "batch_id"])
     y = df["label"]
     batch_ids = df["batch_id"]
 
-    unique_batches = batch_ids.unique()
-    log.info("Found %d batches for CV", len(unique_batches))
-
-    # MLflow
     mlflow.xgboost.autolog(disable=True)
 
     all_acc, all_f1 = [], []
     cv_y_true, cv_y_pred = [], []
 
     with mlflow.start_run(run_name=cfg.experiment.name):
-        # Log hyperparameters once
         mlflow.log_params(cfg.model.params)
 
-        # Cross Validation
-        for fold, batch in enumerate(unique_batches):
-            log.info("Fold %d | Holding out batch: %s", fold, batch)
+        # Drift check
+        log_batch_drift(X, batch_ids)
 
+        # CV
+        for fold, batch in enumerate(batch_ids.unique()):
             train_idx = batch_ids != batch
             test_idx = batch_ids == batch
 
-            X_train, X_test = X.loc[train_idx], X.loc[test_idx]
-            y_train, y_test = y.loc[train_idx], y.loc[test_idx]
-
             model = xgb.XGBClassifier(
-                n_estimators=cfg.model.params.n_estimators,
-                max_depth=cfg.model.params.max_depth,
-                learning_rate=cfg.model.params.learning_rate,
-                objective=cfg.model.params.objective,
-                eval_metric=cfg.model.params.eval_metric,
+                **cfg.model.params,
                 tree_method="hist",
                 random_state=cfg.data.random_state,
             )
 
-            model.fit(X_train, y_train)
-            y_pred = model.predict(X_test)
+            model.fit(X[train_idx], y[train_idx])
+            y_pred = model.predict(X[test_idx])
 
             acc, f1 = log_fold_metrics(
-                y_true=y_test,
-                y_pred=y_pred,
-                fold=fold,
-                feature_names=X.columns,
-                feature_importances=model.feature_importances_,
+                y[test_idx],
+                y_pred,
+                fold,
+                X.columns,
+                model.feature_importances_,
             )
 
             all_acc.append(acc)
             all_f1.append(f1)
 
-            # Collect for aggregated CV CM
-            cv_y_true.extend(y_test.tolist())
+            cv_y_true.extend(y[test_idx].tolist())
             cv_y_pred.extend(y_pred.tolist())
 
-            log.info(
-                "Fold %d → Accuracy: %.4f | F1: %.4f",
-                fold,
-                acc,
-                f1,
-            )
+        # Aggregated CV
+        log_aggregated_cv_metrics(cv_y_true, cv_y_pred)
 
-        # Aggregated CV Confusion Matrix
-        log_aggregated_cv_confusion_matrix(
-            y_true_all=cv_y_true,
-            y_pred_all=cv_y_pred,
-        )
-
-        # Aggregate CV Metrics
         mlflow.log_metric("accuracy_mean", float(np.mean(all_acc)))
         mlflow.log_metric("accuracy_std", float(np.std(all_acc)))
         mlflow.log_metric("f1_mean", float(np.mean(all_f1)))
         mlflow.log_metric("f1_std", float(np.std(all_f1)))
 
-        log.info(
-            "CV Summary → Accuracy: %.4f ± %.4f | F1: %.4f ± %.4f",
-            np.mean(all_acc),
-            np.std(all_acc),
-            np.mean(all_f1),
-            np.std(all_f1),
-        )
-
-        # Final Model
+        # Final model
         final_model = xgb.XGBClassifier(
-            n_estimators=cfg.model.params.n_estimators,
-            max_depth=cfg.model.params.max_depth,
-            learning_rate=cfg.model.params.learning_rate,
-            objective=cfg.model.params.objective,
-            eval_metric=cfg.model.params.eval_metric,
+            **cfg.model.params,
             tree_method="hist",
             random_state=cfg.data.random_state,
         )
-
         final_model.fit(X, y)
 
-        # Final confusion matrix (sanity check only)
-        y_final_pred = final_model.predict(X)
-        log_final_confusion_matrix(
-            y_true=y,
-            y_pred=y_final_pred,
-        )
+        log_final_confusion_matrix(y, final_model.predict(X))
 
-        # Log trained model
-        mlflow.xgboost.log_model(final_model, name="model")
+        # Latency
+        log_prediction_latency(final_model, X.iloc[:1])
 
-        # CoreML Export
+        # Model logging
+        mlflow.xgboost.log_model(final_model, artifact_path="model")
+
+        # CoreML export
         if cfg.coreML_export:
-            try:
-                coreml_model = ct.converters.xgboost.convert(
-                    final_model,
-                    feature_names=list(X.columns),
-                )
-                coreml_path = "habit_tracker.mlpackage"
-                coreml_model.save(coreml_path)
-                mlflow.log_artifact(coreml_path)
+            coreml_model = ct.converters.xgboost.convert(
+                final_model,
+                feature_names=list(X.columns),
+            )
 
-                log.info("CoreML model exported successfully")
+            # Export labels + threshold
+            metadata = {
+                "class_labels": list(map(int, np.unique(y))),
+                "decision_threshold": cfg.model.get("threshold", 0.5),
+            }
 
-            except Exception as e:
-                log.warning("CoreML export failed: %s", e)
+            coreml_model.user_defined_metadata.update(
+                {k: str(v) for k, v in metadata.items()}
+            )
 
-    return final_model, all_acc, all_f1
+            coreml_path = "habit_tracker.mlpackage"
+            coreml_model.save(coreml_path)
+            mlflow.log_artifact(coreml_path)
+
+    return final_model
