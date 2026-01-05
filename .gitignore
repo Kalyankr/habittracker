@@ -239,3 +239,6 @@ ios/ioswatch/*.xcuserdata/
 mlflow.db
 mlruns/
 outputs/
+*.mlpackage
+*.mlpackage/
+
