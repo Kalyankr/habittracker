@@ -10,6 +10,7 @@ hydra:
 data:
   raw_path: "data/raw"
   processed_path: "data/processed/features.csv"
+  test_path: "data/test/features.csv"
   test_size: 0.2
   random_state: 42
 
@@ -19,3 +20,5 @@ experiment:
 
 train_only: true
 coreML_export: false
+
+model_path: null   # if set, will load XGB from local file
