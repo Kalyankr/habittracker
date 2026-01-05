@@ -233,3 +233,9 @@ ios/ioswatch/build/
 ios/ioswatch/DerivedData/
 ios/ioswatch/*.xcworkspace
 ios/ioswatch/*.xcuserdata/
+
+
+# machine learning
+mlflow.db
+mlruns/
+outputs/
