@@ -86,7 +86,7 @@ def train(df: pd.DataFrame, cfg: DictConfig):
         log_prediction_latency(final_model, X.iloc[:1])
 
         # Model logging
-        mlflow.xgboost.log_model(final_model, artifact_path="model")
+        mlflow.xgboost.log_model(final_model, name="model")
 
         # CoreML export
         if cfg.coreML_export:
