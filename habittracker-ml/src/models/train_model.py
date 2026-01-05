@@ -64,6 +64,13 @@ def train(df: pd.DataFrame, cfg: DictConfig):
             cv_y_true.extend(y[test_idx].tolist())
             cv_y_pred.extend(y_pred.tolist())
 
+            log.info(
+                "Fold %d → Accuracy: %.4f | F1: %.4f",
+                fold,
+                acc,
+                f1,
+            )
+
         # Aggregated CV
         log_aggregated_cv_metrics(cv_y_true, cv_y_pred)
 
@@ -90,23 +97,28 @@ def train(df: pd.DataFrame, cfg: DictConfig):
 
         # CoreML export
         if cfg.coreML_export:
-            coreml_model = ct.converters.xgboost.convert(
-                final_model,
-                feature_names=list(X.columns),
-            )
+            try:
+                coreml_model = ct.converters.xgboost.convert(
+                    final_model,
+                    feature_names=list(X.columns),
+                    mode="classifier",
+                )
 
-            # Export labels + threshold
-            metadata = {
-                "class_labels": list(map(int, np.unique(y))),
-                "decision_threshold": cfg.model.get("threshold", 0.5),
-            }
+                metadata = {
+                    "class_labels": list(map(int, np.unique(y))),
+                    "decision_threshold": cfg.model.get("threshold", 0.5),
+                }
+                coreml_model.user_defined_metadata.update(
+                    {k: str(v) for k, v in metadata.items()}
+                )
 
-            coreml_model.user_defined_metadata.update(
-                {k: str(v) for k, v in metadata.items()}
-            )
+                coreml_path = "habit_tracker.mlpackage"
+                coreml_model.save(coreml_path)
+                mlflow.log_artifact(coreml_path)
 
-            coreml_path = "habit_tracker.mlpackage"
-            coreml_model.save(coreml_path)
-            mlflow.log_artifact(coreml_path)
+                log.info("CoreML model exported successfully")
+
+            except Exception as e:
+                log.warning("CoreML export failed: %s", e)
 
     return final_model
